@@ -1,3 +1,9 @@
+function getColor() {
+  // var clrr = 'FireBrick';
+  var clrr = Color.random();
+  return clrr;
+}
+
 function createVein(initialPos) {
 
   var veinPath = new paper.Path();
@@ -29,8 +35,10 @@ function createVein(initialPos) {
       // endShape.position = pointPos;
 
       var line = new Path.Line(getLastPos, pointPos);
-      line.strokeColor = Color.random();
-      line.strokeWidth = 8.0;
+      line.strokeColor = getColor();
+      var lWidth = 1 + (20 - veinPath.length/100);
+      if(lWidth < 1.5){lWidth = 1.5;}
+      line.strokeWidth = lWidth;
       line.strokeCap = 'round';
 
       // console.log(line);
@@ -41,47 +49,19 @@ function createVein(initialPos) {
       var randomBranch = Math.random() < branchProbability ? true: false;
 
       if(randomBranch){
-          var newBranch = makeSmallBranch(getLastPos, pointPos, 1);
+          var smlBranchSize = 150;//randomIntFromInterval(25,400);
+          var newBranch = makeSmallBranch(getLastPos, pointPos, 1, smlBranchSize);
           smlBranches.push(newBranch);
-          var newBranch = makeSmallBranch(getLastPos, pointPos, -1);
+          var newBranch = makeSmallBranch(getLastPos, pointPos, -1, smlBranchSize);
           smlBranches.push(newBranch);
       }
 
   }
 
 
-  // function makeSmallBranch(thisPos, prevPos){
+function makeSmallBranch(thisPos, prevPos, dir, branchL){
 
-  //     var smlBranchStart = thisPos;
-  //     var smlBranchEnd = prevPos;//new paper.Point(thisPos.x, thisPos.y);
-
-
-  //     var tempVec = smlBranchEnd.subtract(smlBranchStart);
-  //     var perpVecR = new paper.Point(tempVec.x-tempVec.y*-1, tempVec.y-tempVec.x);
-  //     var perpVecL = new paper.Point(tempVec.x-tempVec.y, tempVec.y-tempVec.x*-1);
-
-  //     var dirVecR = perpVecR.normalize();
-
-  //     var dirVecL = perpVecL.normalize();
-  //     // console.log(dirVec);
-
-  //     var newEndR = smlBranchStart.add(dirVecR.multiply(75));
-
-  //     var smlBranchR = new Path.Line(smlBranchStart, newEndR);
-  //     smlBranchR.strokeColor = Color.random();
-  //     smlBranchR.strokeWidth = 8.0;
-  //     smlBranchR.strokeCap = 'round';
-
-  //     var newEndL = smlBranchStart.add(dirVecL.multiply(75));
-
-  //     var smlBranchL = new Path.Line(smlBranchStart, newEndL);
-  //     smlBranchL.strokeColor = Color.random();
-  //     smlBranchL.strokeWidth = 8.0;
-  //     smlBranchL.strokeCap = 'round';
-  // }
-
-
-function makeSmallBranch(thisPos, prevPos, dir){
+      var smlBranchLength = branchL;//randomIntFromInterval(50,300);
 
       var smlBranchStart = thisPos;
       var prevBranchPoint = prevPos;
@@ -93,7 +73,7 @@ function makeSmallBranch(thisPos, prevPos, dir){
       if(dir > .5){
         var perpVecR = new paper.Point(tempVec.x-tempVec.y*-1, tempVec.y-tempVec.x);
       } else {
-        var perpVecR = new paper.Point(tempVec.x-tempVec.y, tempVec.y-tempVec.x*-1);      
+        var perpVecR = new paper.Point(tempVec.x-tempVec.y, tempVec.y-tempVec.x*-1);
       }
 
       var branchDir = perpVecR.normalize();
@@ -118,8 +98,8 @@ function makeSmallBranch(thisPos, prevPos, dir){
 
 
       function grow(){
-        if(branchGrow < 200) {
-          var branchPointAdd = smlBranchStart.add(branchDir.multiply(branchGrow).add(randomIntFromInterval(-5,5)));
+        if(branchGrow < smlBranchLength) {
+          var branchPointAdd = smlBranchStart.add(branchDir.multiply(branchGrow));
           smlBranchR.add(branchPointAdd);//smlBranchStart.add(branchDir.multiply(branchGrow).add(randomIntFromInterval(-5,5))));
 
           var smlBranchSegLength = smlBranchR.segments.length-2;
@@ -127,8 +107,8 @@ function makeSmallBranch(thisPos, prevPos, dir){
 
           console.log(prevSmlBranchPos);
           var smlBranchPiece = new Path.Line(branchPointAdd, prevSmlBranchPos);
-          smlBranchPiece.strokeColor = Color.random();
-          smlBranchPiece.strokeWidth = (200-branchGrow)/25;
+          smlBranchPiece.strokeColor = getColor();
+          smlBranchPiece.strokeWidth = (smlBranchLength-branchGrow)/25;
           smlBranchPiece.strokeCap = 'round';
 
           branchGrow +=10;
