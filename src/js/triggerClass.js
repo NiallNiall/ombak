@@ -69,6 +69,8 @@ function createStep(constructPos, clr) {
     // Create an empty shape
     var thisShape = new paper.Path();
 
+    // create a locally scoped variable so it's not overwritten
+    var trigEvent;
 
     var setTrigEvent = function(trigEventVar) {
       trigEvent = trigEventVar;
@@ -79,14 +81,21 @@ function createStep(constructPos, clr) {
       thisShape.fillColor = clr1;
     }
 
-    function shapeOn(){
-      thisShape.strokeColor = 'NavajoWhite';
-      thisShape.strokeWidth = 15.0;
+    var strokeOnColor = 'NavajoWhite';
+    var strokeOnWidth = 15.0;
+    var strokeOffWidth = 5.0;
+
+    var strokeOffColor = null;
+
+    var shapeOn = function(){
+      thisShape.strokeColor = strokeOnColor;
+      thisShape.strokeWidth = strokeOnWidth;
     }
 
-    function shapeOff(){
+    var shapeOff = function(){
       thisShape.fillColor = clr1;
-      thisShape.strokeColor = null;
+      thisShape.strokeColor = strokeOffColor;
+      thisShape.strokeWidth = strokeOffWidth;
     }
 
 
@@ -101,7 +110,9 @@ function createStep(constructPos, clr) {
     triggerEvent: triggerEvent,
     available: available,
     getAvail: getAvail,
-    setAvail: setAvail
+    setAvail: setAvail,
+    setOnStroke: setOnStroke,
+    setOffStroke: setOffStroke
   }
 
   return step;
@@ -139,10 +150,10 @@ function createStep(constructPos, clr) {
 
     } else {
       if(!available) {
-        console.log("out");
+        // console.log("out");
         triggerEvent();
       } else {
-        console.log("in");
+        // console.log("in");
         triggerOn();
       }
     }
@@ -160,6 +171,17 @@ function createStep(constructPos, clr) {
       shapeOff();
   }
 
+  function setOnStroke(tempStrokeColor, tempStrokeSize) {
+    // shapeOn = tempShapeFunc;
+    strokeOnWidth = tempStrokeSize;
+    strokeOnColor = tempStrokeColor;
+  }
+
+  function setOffStroke(tempStrokeColor, tempStrokeSize) {
+    strokeOffColor = tempStrokeColor;
+    strokeOffWidth = tempStrokeSize;
+  }
+
 }
 
 function createSnare(constructPos) {
@@ -173,7 +195,7 @@ function createSnare(constructPos) {
     }
 
     var trigEventVar = function(){
-      console.log("Snare Triggered!");
+      // console.log("Snare Triggered!");
       snare.triggerAttackRelease("32n");
     }
 
@@ -197,7 +219,7 @@ function createKick(constructPos) {
     }
 
     var trigEventVar = function(){
-      console.log("Kick Triggered!");
+      // console.log("Kick Triggered!");
         kick.triggerAttackRelease("C2", "32n");
     }
 
@@ -213,6 +235,9 @@ function createKick(constructPos) {
 
 function createPulse(constructPos) {
 
+    var pulseClr = 'DarkCyan';
+    var pulseSize = '5.0';
+
     var kickStep = createStep(constructPos, 'DarkCyan');
     radius = 20;
 
@@ -224,12 +249,15 @@ function createPulse(constructPos) {
 
     kickStep.setTrigEvent(trigEventVar);
 
+    kickStep.setOnStroke('Tomato', '8.0');
+    kickStep.setOffStroke(pulseClr, pulseSize);
+
     function createShape(constructPos) {
       var from = new Point(view.center.x, view.center.y);
       var to = new Point(constructPos.x, constructPos.y);
       var path = new Path.Line(from, to);
-      path.strokeColor = 'Blue';
-      path.strokeWidth = '5.0';
+      path.strokeColor = pulseClr;
+      path.strokeWidth = pulseSize;
       return path;
     }
 

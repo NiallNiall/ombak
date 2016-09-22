@@ -184,14 +184,14 @@ paper.view.onFrame = function(event) {
 
     switch(selectr) {
       case 1:
-      console.log("1");
+      // console.log("1");
       selectedIcon.remove();
       selectedIcon = new paper.Path.Circle(selectedIconPoint, 10);
       selectedIcon.fillColor ='DarkCyan';
 
       break;
       case 2:
-      console.log("2");
+      // console.log("2");
       var rectRadius = 20;
       selectedIcon.remove();
       selectedIcon = new paper.Path.Rectangle(
@@ -201,7 +201,7 @@ paper.view.onFrame = function(event) {
       selectedIcon.fillColor ='Tomato';
       break;
       case 3:
-      console.log("3");
+      // console.log("3");
       var rectRadius = 25;
       selectedIcon.remove();
       selectedIcon = new paper.Path.Rectangle(
@@ -211,13 +211,13 @@ paper.view.onFrame = function(event) {
       selectedIcon.fillColor ='NavajoWhite';
       break;
       case 4:
-      console.log("4");
+      // console.log("4");
       selectedIcon.remove();
       selectedIcon = new paper.Path.Circle(selectedIconPoint, 10);
       selectedIcon.fillColor ='SaddleBrown';
       break;
       default:
-      console.log("0");
+      // console.log("0");
     }
   }
 
