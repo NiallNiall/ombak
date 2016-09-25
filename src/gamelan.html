@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Gamelan</title>
+
+  <link rel="stylesheet" href="css/gamelan.css">
+
+</head>
+<body>
+
+
+    <div id="gamelan" class="gam-outer">
+    </div>
+
+
+  <!-- <script src="js/vendor/paper-full.js"></script> -->
+  <!-- <script src="js/vendor/Tone.js"></script> -->
+  <!-- <script src="js/vendor/soundmanager2.js"></script> -->
+
+  <script type="text/javascript">
+
+
+
+
+    var context = new AudioContext();
+
+
+    function loadAudio( object, url) {
+
+        var request = new XMLHttpRequest();
+          request.open('GET', url, true);
+          request.responseType = 'arraybuffer';
+
+          request.onload = function() {
+              context.decodeAudioData(request.response, function(buffer) {
+                  object.buffer = buffer;
+              });
+          }
+          request.send();
+    }
+
+    function addAudioProperties(object) {
+    object.name = object.id;
+    object.source = object.getAttribute("data-sound");
+    loadAudio(object, object.source);
+    object.play = function () {
+              var s = context.createBufferSource();
+              s.buffer = object.buffer;
+              s.connect(context.destination);
+              s.start(0);
+              object.s = s;
+          }
+      }
+
+
+
+
+    var numberOfKeys = 7;
+
+
+    var keyDivision = 100 / numberOfKeys;
+    var gContainer = document.getElementById("gamelan");
+
+    var gSamples = ['01', '02', '03', '04', '05', '06', '07', '08'];
+
+
+
+
+    var keys = [];
+
+
+
+      function getNodeIndex(node) {
+          var index = 0;
+          while ( (node = node.previousSibling) ) {
+              if (node.nodeType != 3 || !/^\s*$/.test(node.data)) {
+                  index++;
+              }
+          }
+          return index;
+      }
+
+
+
+    for(var i = 0; i < numberOfKeys; i++){
+
+      var gamKey = document.createElement("a");
+      gamKey.className = "gam-key";
+      gamKey.id = "key-" + i;
+      gamKey.setAttribute("style", "width:" + keyDivision + "%;");
+      gamKey.setAttribute("data-sound", "samples/" + gSamples[i] + ".mp3");
+
+      var gamInner = document.createElement("div");
+      gamInner.className = "key-inner";
+      gamKey.appendChild(gamInner);
+
+      // var t = document.createTextNode("CLICK ME");
+      // gamKey.appendChild(t);
+      gContainer.appendChild(gamKey);
+      keys.push(gamKey);
+
+    }
+
+    // var testKey = document.getElementById("key-1");
+    // addAudioProperties(testKey);
+
+    // testKey.onclick = function() {
+      // this.play();
+    // }
+
+    // console.log(testKey);
+
+    for(var i =0; i < keys.length; i++){
+
+      var thisKey = keys[i];
+      addAudioProperties(thisKey);
+
+      thisKey.onclick = function() {
+
+        var thisIndex = getNodeIndex(this);
+        keys[thisIndex].play();
+
+        console.log(thisIndex);
+      };
+
+    }
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>
