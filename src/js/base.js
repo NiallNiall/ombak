@@ -23,6 +23,8 @@ newSynth.set({
     }
 });
 
+var kick = new Tone.DrumSynth().toMaster();
+
 // ==================================================
 
 // Set Boolean for the track playing or not.
@@ -31,6 +33,8 @@ var playing = true;
 // Instantiate empty array outside of onload scope
 var steps = [];
 var branchs = [];
+
+var kicks = [];
 
 function playpause() {
     playing = !playing;
@@ -67,6 +71,13 @@ function makeSingleStep(tempPos, tempArray) {
 
 // This is very bodgy - rewrite!
 function makeSingleStepPitch(tempPos, tempArray, inc) {
+    var tempStep = createNote(new paper.Point(tempPos.x, tempPos.y));
+    tempStep.setPitch(inc, 100);
+    tempArray.push(tempStep);
+}
+
+// Even Bodgier!!
+function makeSingleStepKickPitch(tempPos, tempArray, inc) {
     var tempStep = createKick(new paper.Point(tempPos.x, tempPos.y));
     tempStep.setPitch(inc, 100);
     tempArray.push(tempStep);
@@ -142,6 +153,9 @@ window.onload = function() {
     for(var i=0; i<360; i+=15){
         var quickPosTest = getCirclePos(paper.view.center, i, 200);
         makeSingleStepPitch(quickPosTest, steps, i);
+
+        var quickPosTest2 = getCirclePos(paper.view.center, i, 100);
+        makeSingleStepKickPitch(quickPosTest2, kicks, i);
     }
 
     // Create a vector for the playhead
@@ -175,6 +189,34 @@ window.onload = function() {
             for (var i = 0; i < branchs.length; i++) {
                 branchs[i].loop();
             }
+        }
+
+        for (var i = 0; i < kicks.length; i++) {
+
+            kicks[i].loop();
+
+            // Create an empty array for the Booleans
+            var boolArray = [];
+
+            for (var j = 0; j < branchs.length; j++) {
+                var branchPos = branchs[j].getPHPos();
+
+                var checkMovr = kicks[i].checkDistance(branchPos);
+                boolArray.push(checkMovr);
+
+                // console.log(checkMovr);
+            }
+
+            // Check if any Bools return positive.
+            var logr = isInArray(true, boolArray);
+
+            // If they do, then set state of the kick.
+            if (logr) {
+                kicks[i].setAvail(false);
+            } else {
+                kicks[i].setAvail(true);
+            }
+
         }
 
         for (var i = 0; i < steps.length; i++) {

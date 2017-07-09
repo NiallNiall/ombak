@@ -220,7 +220,7 @@ function createStep(constructPos, clr) {
 
 
     var setTrigEvent = function(trigEventVar) {
-        trigEvent = trigEventVar;
+        triggerEvent = trigEventVar;
     }
 
     function createShape(shape) {
@@ -242,7 +242,6 @@ function createStep(constructPos, clr) {
     var step = {
         position: getPosition,
         // stepTrig: createTrigger,
-        radius: Math.random() * 100,
         drawStep: drawStep,
         createShape: createShape,
         setTrigEvent: setTrigEvent,
@@ -268,8 +267,8 @@ function createStep(constructPos, clr) {
     }
 
     function changeKey() {
-        console.log(keySteps.length);
-        console.log(keyVar);
+        // console.log(keySteps.length);
+        // console.log(keyVar);
 
         if(keyVar < keySteps.length-1){
             keyVar +=1;
@@ -401,13 +400,33 @@ function jsMap(val, A, B, a, b) {
     return mapd;
 }
 
+function createNote(constructPos) {
+
+    // var thisNote = "B#4";
+
+    var kickStep = createStep(constructPos, 'DarkCyan');
+
+    function createShape(constructPos) {
+        var myShape = new paper.Path.Circle(constructPos, 10);
+        return myShape;
+    }
+
+
+    // kickStep.setPitchEvent(setPitch);
+
+
+    var myShape = createShape(constructPos);
+    kickStep.createShape(myShape);
+
+    return kickStep;
+
+}
 
 function createKick(constructPos) {
 
     // var thisNote = "B#4";
 
     var kickStep = createStep(constructPos, 'DarkCyan');
-    radius = 20;
 
     function createShape(constructPos) {
         var myShape = new paper.Path.Circle(constructPos, 10);
@@ -418,8 +437,8 @@ function createKick(constructPos) {
     // kickStep.setPitchEvent(setPitch);
 
     var trigEventVar = function() {
-        // console.log("Synth Triggered!");
-        // synth.triggerAttackRelease(thisNote, "32n");
+        console.log("Synth Triggered!");
+        kick.triggerAttackRelease("C2", "32n");
     }
 
     kickStep.setTrigEvent(trigEventVar);
