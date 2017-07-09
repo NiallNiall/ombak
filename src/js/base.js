@@ -97,6 +97,12 @@ function removeAllSteps() {
     steps = [];
 }
 
+function changeKey() {
+    for (var i = 0; i < steps.length; i++) {
+        steps[i].changeKey();
+    }
+}
+
 function resetbranchs() {
     for (var i = 0; i < branchs.length; i++) {
         var tempBranch = branchs[i];
@@ -117,7 +123,9 @@ window.onload = function() {
 
 
     // Set scroller
-    var countr = 1;
+    var countr = 0.001;
+
+   
 
 
     var edgeBorder = 50;
@@ -157,7 +165,7 @@ window.onload = function() {
     paper.view.onFrame = function(event) {
 
         if (pointPos <= 1) {
-            pointPos += 0.005;
+            pointPos += 0.01;
         } else {
             pointPos = 0.001;
         }
@@ -198,6 +206,13 @@ window.onload = function() {
         }
 
 
+        if (countr <= 1) {
+            countr += 0.01;
+        } else {
+            changeKey();
+            countr = 0.001;
+        }
+
     }
 
 
@@ -228,6 +243,11 @@ window.onload = function() {
         if (event.key == 'w') {
             var tempbranch = branchs[branchs.length - 1];
             tempbranch.removebranch();
+
+        }
+
+       if (event.key == 't') {
+        changeKey();
         }
 
     }

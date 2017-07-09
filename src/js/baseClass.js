@@ -54,7 +54,7 @@ function createBranch(initialPos) {
     function loop() {
 
         if (pointPos <= 1) {
-            pointPos += 0.005;
+            pointPos += 0.01;
         } else {
             pointPos = 0.001;
         }
@@ -164,12 +164,19 @@ function createStep(constructPos, clr) {
     // Create an empty shape
     var thisShape = new paper.Path();
 
+    var keyVar = 0;
+    var mapNoteVar = 0;
+
     // var outlinePulse = new paper.Path();
     var outlineMoving = false;
     var outlineSize = 0;
     var outlineOpac = 1.0;
     var ogOutlineSize = 5;
     var outlinePulse = createOutlinePulse(constructPos, ogOutlineSize);
+
+
+    var keySteps = [0,1,0,2];
+    var notes = ['C3', 'E3', 'G3', 'A3', 'C4', 'E4', 'G4', 'A4', 'C5', 'E5', 'G5', 'A5', 'C6', 'E6', 'G6', 'A6'];
 
 
     function createOutlinePulse(tempConstructPos, tempOutlineSize) {
@@ -191,7 +198,7 @@ function createStep(constructPos, clr) {
                 // console.log(outlineOpac);
                 tempScaling = ogOutlineSize + outlineSize * 10;
                 if (outlineOpac > 0.01) {
-                    outlineOpac -= 0.005;
+                    outlineOpac -= 0.05;
                 }
 
             } else {
@@ -245,6 +252,7 @@ function createStep(constructPos, clr) {
         getAvail: getAvail,
         setAvail: setAvail,
         setPitch: setPitch,
+        changeKey: changeKey,
         setPitchEvent: setPitchEvent,
         loop: loop,
         getThisShape: getThisShape,
@@ -257,6 +265,21 @@ function createStep(constructPos, clr) {
 
     function getOutlineShape() {
         return outlinePulse;
+    }
+
+    function changeKey() {
+        console.log(keySteps.length);
+        console.log(keyVar);
+
+        if(keyVar < keySteps.length-1){
+            keyVar +=1;
+        } else {
+            keyVar = 0;
+        }
+        
+
+        var note = notes[mapNoteVar + keySteps[keyVar]];
+        thisNote = note;
     }
 
 
@@ -274,7 +297,7 @@ function createStep(constructPos, clr) {
 
         // var notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
         // var notes = ['C','D','E','F#','G','A','B'];
-        var notes = ['C3', 'E3', 'G3', 'A3', 'C4', 'E4', 'G4', 'A4', 'C5', 'E5', 'G5', 'A5', 'C6', 'E6', 'G6', 'A6'];
+        // var notes = ['C3', 'E3', 'G3', 'A3', 'C4', 'E4', 'G4', 'A4', 'C5', 'E5', 'G5', 'A5', 'C6', 'E6', 'G6', 'A6'];
         // var note = notes[3] + 4;
 
         // var mapI = Math.round(randomIntFromInterval(0, 8));
@@ -285,7 +308,9 @@ function createStep(constructPos, clr) {
 
         var maxNoteTop = 360;
         var mapNote = Math.round(jsMap(noteVar, 0, maxNoteTop, 0, notes.length));
-        var note = notes[mapNote];
+
+        mapNoteVar = mapNote;
+        var note = notes[mapNoteVar];
 
         thisNote = note;
 
