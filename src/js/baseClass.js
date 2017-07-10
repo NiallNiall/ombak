@@ -54,7 +54,7 @@ function createBranch(initialPos) {
     function loop() {
 
         if (pointPos <= 1) {
-            pointPos += 0.01;
+            pointPos += masterSpeed;
         } else {
             pointPos = 0.001;
         }
@@ -197,7 +197,7 @@ function createStep(constructPos, clr) {
                 // outlineOpac = jsMap(outlineSize,0,5.05,0.6,0)
                 // console.log(outlineOpac);
                 tempScaling = ogOutlineSize + outlineSize * 10;
-                if (outlineOpac > 0.01) {
+                if (outlineOpac > masterSpeed) {
                     outlineOpac -= 0.05;
                 }
 

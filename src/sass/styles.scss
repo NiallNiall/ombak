@@ -49,4 +49,16 @@ body {
   background: $bgColour;
   width: 100%;
   height: 100%;
+  &.first {
+    background: darken($bgColour, 20%);
+  }
+  &.second {
+    background: darkeen($bgColour, 30%);
+  }
+  &.third {
+    background: darken($bgColour, 10%);
+  }
+  &.fourth {
+    background: darken($bgColour, 15%);
+  }
 }

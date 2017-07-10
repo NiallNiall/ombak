@@ -36,6 +36,10 @@ var branchs = [];
 
 var kicks = [];
 
+masterSpeed = 0.01;
+
+
+
 function playpause() {
     playing = !playing;
 }
@@ -153,7 +157,9 @@ window.onload = function() {
     for(var i=0; i<360; i+=15){
         var quickPosTest = getCirclePos(paper.view.center, i, 200);
         makeSingleStepPitch(quickPosTest, steps, i);
+    }
 
+    for(var i=0; i<360; i+=45){
         var quickPosTest2 = getCirclePos(paper.view.center, i, 100);
         makeSingleStepKickPitch(quickPosTest2, kicks, i);
     }
@@ -174,12 +180,12 @@ window.onload = function() {
     var endPos = centerPos.x + halfPHLength;
 
 
-    var pointPos = 0.01;
+    var pointPos = 0.001;
 
     paper.view.onFrame = function(event) {
 
         if (pointPos <= 1) {
-            pointPos += 0.01;
+            pointPos += masterSpeed;
         } else {
             pointPos = 0.001;
         }
@@ -249,15 +255,30 @@ window.onload = function() {
 
 
         if (countr <= 1) {
-            countr += 0.01;
+            countr += masterSpeed;
         } else {
             changeKey();
             countr = 0.001;
+            canvasClass();
         }
 
     }
 
+    var canvasClasses = ['first','second','third','fourth'];
+    var canvasCntr = 0;
 
+    function canvasClass(){
+        canvas.className =
+        canvas.className.replace( /(?:^|\s)first|(?:^|\s)second|(?:^|\s)third|(?:^|\s)fourth(?!\S)/g , '' );
+
+        if(canvasCntr < 3) {
+            canvasCntr += 1
+        } else {
+            canvasCntr = 0;
+        }
+
+        canvas.className += ' ' + canvasClasses[canvasCntr];
+    }
 
     var mouseTool = new paper.Tool();
 
